@@ -1,4 +1,19 @@
+# इसे main.py के ऊपरी हिस्से में लिखें
+@st.cache_resource
+def load_my_model():
+    # यह मॉडल को केवल एक बार लोड करेगा
+    model = tf.keras.models.load_model('trained_model.keras', compile=False)
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    return model
 
+model = load_my_model()
+
+def model_prediction(test_image):
+    image = tf.keras.preprocessing.image.load_img(test_image, target_size=(128,128))
+    input_arr = tf.keras.preprocessing.image.img_to_array(image)
+    input_arr = np.array([input_arr])
+    prediction = model.predict(input_arr)
+    return np.argmax(prediction)
 import streamlit as st 
 
 import tensorflow as tf 
